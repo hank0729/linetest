@@ -175,7 +175,10 @@ def handle_message(event):
 def temp(tempgit):
     try:
         temp = tempgit
+        
         if(float(temp) > low and float(temp) < up):
+            topic = "temp/test/2023/12/18/2023/12/24/fan"
+            client.publish(topic, "0")
             url = 'https://notify-api.line.me/api/notify'
             token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
             headers = {
@@ -185,8 +188,7 @@ def temp(tempgit):
                 'message': "目前溫度" + str(temp)
                     }
             requests.post(url, headers=headers, data=data)
-            topic = "temp/test/2023/12/18/2023/12/24/fan"
-            client.publish(topic, "0")
+
         elif(float(temp) > up):
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, "1")
