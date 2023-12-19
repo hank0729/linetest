@@ -158,7 +158,7 @@ def handle_message(event):
         }
         requests.post(url, headers=headers, data=data)
 
-@app.route('/temp/<int:temp>')
+@app.route('/temp/<int:tempgit>')
 def temp(tempgit):
     temp = tempgit
     url = 'https://notify-api.line.me/api/notify'
