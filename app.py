@@ -152,10 +152,10 @@ def handle_message(event):
                 url = 'https://notify-api.line.me/api/notify'
                 token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
                 headers = {
-                'Authorization': 'Bearer ' + token
+                    'Authorization': 'Bearer ' + token
                     }
                 data = {
-                'message': "頻率時間過短，請重新輸入"
+                    'message': "頻率時間過短，請重新輸入"
                     }
     elif "檢視設定" in message_text:
 
