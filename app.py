@@ -158,7 +158,7 @@ def handle_message(event):
         }
         requests.post(url, headers=headers, data=data)
 
-@app.route('/temp/<float:tempgit>')
+@app.route('/temp/<int:tempgit>')
 def temp(tempgit):
     try:
         temp = tempgit
