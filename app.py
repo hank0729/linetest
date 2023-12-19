@@ -132,7 +132,7 @@ def handle_message(event):
             requests.post(url, headers=headers, data=data)
 
     elif "溫度頻率設定" in message_text:
-
+        global f
         parts = message_text.split()
         if len(parts) == 2:
             keyword = parts[0]
@@ -149,7 +149,7 @@ def handle_message(event):
                         }
                 requests.post(url, headers=headers, data=data)
 
-                client.publish(topic, str(f))
+                client.publish(topic, str(parts[1]))
             elif f < 10:
                 url = 'https://notify-api.line.me/api/notify'
                 token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
