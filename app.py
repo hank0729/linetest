@@ -12,11 +12,7 @@ low = 20
 f = 0
 temp = 0
 # 在全局范围内创建 MQTT 客户端连接
-broker_address = "broker.MQTTGO.io"
-broker_port = 1883
 
-client = mqtt.Client("bot")
-client.connect(broker_address, broker_port, 60)
 
 
 from linebot import (
@@ -75,9 +71,15 @@ def handle_message(event):
     message_text = event.message.text
 
     # 发布消息到 MQTT
-    topic = "temp/test/2023/12/18/2023/12/24/fan"
+
 
     if "風扇啟動" in message_text:
+        broker_address = "broker.MQTTGO.io"
+        broker_port = 1883
+
+        client = mqtt.Client("bot")
+        client.connect(broker_address, broker_port, 60)
+        topic = "temp/test/2023/12/18/2023/12/24/fan"
         client.publish(topic, "1")
         url = 'https://notify-api.line.me/api/notify'
         token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
@@ -89,6 +91,12 @@ def handle_message(event):
         }
         requests.post(url, headers=headers, data=data)
     elif "風扇關閉" in message_text:
+        broker_address = "broker.MQTTGO.io"
+        broker_port = 1883
+
+        client = mqtt.Client("bot")
+        client.connect(broker_address, broker_port, 60)
+        topic = "temp/test/2023/12/18/2023/12/24/fan"
         client.publish(topic, "0")
         url = 'https://notify-api.line.me/api/notify'
         token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
@@ -136,6 +144,11 @@ def handle_message(event):
             keyword = parts[0]
             f = int(parts[1])
             if f >= 10 : 
+                broker_address = "broker.MQTTGO.io"
+                broker_port = 1883
+
+                client = mqtt.Client("bot")
+                client.connect(broker_address, broker_port, 60)
                 topic = "temp/test/2023/12/18/2023/12/24/f"
                 client.publish(topic, str(parts[1]))
                 url = 'https://notify-api.line.me/api/notify'
@@ -177,6 +190,11 @@ def temp(tempgit):
         temp = tempgit
         
         if(float(temp) > low and float(temp) < up):
+            broker_address = "broker.MQTTGO.io"
+            broker_port = 1883
+
+            client = mqtt.Client("bot")
+            client.connect(broker_address, broker_port, 60)
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, "0")
             url = 'https://notify-api.line.me/api/notify'
@@ -190,6 +208,11 @@ def temp(tempgit):
             requests.post(url, headers=headers, data=data)
 
         elif(float(temp) > up):
+            broker_address = "broker.MQTTGO.io"
+            broker_port = 1883
+
+            client = mqtt.Client("bot")
+            client.connect(broker_address, broker_port, 60)
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, "1")
             url = 'https://notify-api.line.me/api/notify'
