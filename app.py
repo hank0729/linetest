@@ -158,7 +158,7 @@ def handle_message(event):
         }
         requests.post(url, headers=headers, data=data)
 
-@app.route('/temp/<int:tempgit>')
+@app.route('/temp/<string:tempgit>')
 def temp(tempgit):
     try:
         temp = tempgit
@@ -171,7 +171,15 @@ def temp(tempgit):
             'message': "目前溫度" + str(temp)
                 }
         requests.post(url, headers=headers, data=data)
+        
+        if(temp > up):
+            topic = "temp/test/2023/12/18/2023/12/24/fan"
+            client.publish(topic, 1)
+        elif(temp < low):
+            topic = "temp/test/2023/12/18/2023/12/24/fan"
+            client.publish(topic, 0)
         return "Succeed"
+    
     except Exception as e:
             return jsonify({'Error': str(e)})
     
