@@ -7,8 +7,10 @@ import os
 import requests
 import time
 import sqlite3
-
-up, low, f, temp = 0, 0, 0, 0
+up = 35
+low = 20
+f = 20
+temp = 0
 # 在全局范围内创建 MQTT 客户端连接
 broker_address = "broker.MQTTGO.io"
 broker_port = 1883
