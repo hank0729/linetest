@@ -198,11 +198,7 @@ def temp(tempgit):
                 'message': "\n注意！現在溫度過高" + "目前溫度" + str(temp)
         }
             requests.post(url, headers=headers, data=data)
-            topic = "temp/test/2023/12/18/2023/12/24/fan"
-            client.publish(topic, 1)
         elif(float(temp) < low):
-            topic = "temp/test/2023/12/18/2023/12/24/fan"
-            client.publish(topic, 0)
             url = 'https://notify-api.line.me/api/notify'
             token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
             headers = {
