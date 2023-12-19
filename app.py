@@ -118,7 +118,7 @@ def handle_message(event):
                 'Authorization': 'Bearer ' + token
                     }
             data = {
-                'message': "設定成功 => 上限為" + str(up) + "°C"
+                'message': "\n設定成功 => 上限為" + str(up) + "°C"
                     }
             requests.post(url, headers=headers, data=data)
     elif "溫度下限設定" in message_text:
@@ -133,7 +133,7 @@ def handle_message(event):
                 'Authorization': 'Bearer ' + token
                     }
             data = {
-                'message': "設定成功 => 下限為" + str(low) + "°C"
+                'message': "\n設定成功 => 下限為" + str(low) + "°C"
                     }
             requests.post(url, headers=headers, data=data)
 
@@ -157,7 +157,7 @@ def handle_message(event):
                     'Authorization': 'Bearer ' + token
                         }
                 data = {
-                    'message': "設定成功 => 頻率為" + str(f) + "秒"
+                    'message': "\n設定成功 => 頻率為" + str(f) + "秒"
                         }
                 requests.post(url, headers=headers, data=data)
 
@@ -169,7 +169,7 @@ def handle_message(event):
                     'Authorization': 'Bearer ' + token
                     }
                 data = {
-                    'message': "頻率時間過短，請重新輸入"
+                    'message': "\n頻率時間過短，請重新輸入"
                     }
                 requests.post(url, headers=headers, data=data)
     elif "檢視設定" in message_text:
