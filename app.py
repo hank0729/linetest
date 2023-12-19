@@ -88,7 +88,6 @@ def handle_message(event):
             'message': "啟動成功"
         }
         requests.post(url, headers=headers, data=data)
-        client.publish(topic, 1)
     elif "風扇關閉" in message_text:
         client.publish(topic, "0")
         url = 'https://notify-api.line.me/api/notify'
@@ -100,7 +99,6 @@ def handle_message(event):
             'message': "關閉成功"
         }
         requests.post(url, headers=headers, data=data)
-        client.publish(topic, 0)
     elif "溫度上限設定" in message_text:
         parts = message_text.split()
         if len(parts) == 2:
@@ -186,9 +184,11 @@ def temp(tempgit):
                 'message': "目前溫度" + str(temp)
                     }
             requests.post(url, headers=headers, data=data)
+            topic = "temp/test/2023/12/18/2023/12/24/fan"
+            client.publish(topic, "0")
         elif(float(temp) > up):
             topic = "temp/test/2023/12/18/2023/12/24/fan"
-            client.publish(topic, 1)
+            client.publish(topic, "1")
             url = 'https://notify-api.line.me/api/notify'
             token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
             headers = {
@@ -198,6 +198,8 @@ def temp(tempgit):
                 'message': "\n注意！現在溫度過高" + "目前溫度" + str(temp)
         }
             requests.post(url, headers=headers, data=data)
+            topic = "temp/test/2023/12/18/2023/12/24/fan"
+            client.publish(topic, 1)
         elif(float(temp) < low):
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, 0)
