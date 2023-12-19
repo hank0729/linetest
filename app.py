@@ -81,6 +81,7 @@ def handle_message(event):
         client.connect(broker_address, broker_port, 60)
         topic = "temp/test/2023/12/18/2023/12/24/fan"
         client.publish(topic, "1")
+        client.disconnect()
         url = 'https://notify-api.line.me/api/notify'
         token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
         headers = {
@@ -98,6 +99,7 @@ def handle_message(event):
         client.connect(broker_address, broker_port, 60)
         topic = "temp/test/2023/12/18/2023/12/24/fan"
         client.publish(topic, "0")
+        client.disconnect()
         url = 'https://notify-api.line.me/api/notify'
         token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
         headers = {
@@ -151,6 +153,7 @@ def handle_message(event):
                 client.connect(broker_address, broker_port, 60)
                 topic = "temp/test/2023/12/18/2023/12/24/f"
                 client.publish(topic, str(parts[1]))
+                client.disconnect()
                 url = 'https://notify-api.line.me/api/notify'
                 token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
                 headers = {
@@ -197,6 +200,7 @@ def temp(tempgit):
             client.connect(broker_address, broker_port, 60)
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, "0")
+            client.disconnect()
             url = 'https://notify-api.line.me/api/notify'
             token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
             headers = {
@@ -215,6 +219,7 @@ def temp(tempgit):
             client.connect(broker_address, broker_port, 60)
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, "1")
+            client.disconnect()
             url = 'https://notify-api.line.me/api/notify'
             token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
             headers = {
