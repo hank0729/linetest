@@ -157,6 +157,7 @@ def handle_message(event):
                 data = {
                     'message': "頻率時間過短，請重新輸入"
                     }
+                requests.post(url, headers=headers, data=data)
     elif "檢視設定" in message_text:
 
         url = 'https://notify-api.line.me/api/notify'
