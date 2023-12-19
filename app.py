@@ -195,7 +195,7 @@ def temp(tempgit):
                 'Authorization': 'Bearer ' + token
                     }
             data = {
-                'message': "\n注意！現在溫度過高"
+                'message': "\n注意！現在溫度過高" + "目前溫度" + str(temp)
         }
         elif(float(temp) < low):
             topic = "temp/test/2023/12/18/2023/12/24/fan"
@@ -206,7 +206,7 @@ def temp(tempgit):
                 'Authorization': 'Bearer ' + token
                     }
             data = {
-                'message': "\n注意！現在溫度過低"
+                'message': "\n注意！現在溫度過低" + "目前溫度" + str(temp)
         }
         return "Succeed"
     
