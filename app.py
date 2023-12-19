@@ -137,6 +137,7 @@ def handle_message(event):
             f = int(parts[1])
             if f >= 10 : 
                 topic = "temp/test/2023/12/18/2023/12/24/f"
+                client.publish(topic, str(parts[1]))
                 url = 'https://notify-api.line.me/api/notify'
                 token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
                 headers = {
@@ -147,7 +148,7 @@ def handle_message(event):
                         }
                 requests.post(url, headers=headers, data=data)
 
-                client.publish(topic, str(parts[1]))
+
             elif f < 10:
                 url = 'https://notify-api.line.me/api/notify'
                 token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
