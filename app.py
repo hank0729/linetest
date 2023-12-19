@@ -172,10 +172,10 @@ def temp(tempgit):
                 }
         requests.post(url, headers=headers, data=data)
         
-        if(temp > up):
+        if(float(temp) > up):
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, 1)
-        elif(temp < low):
+        elif(float(temp) < low):
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, 0)
         return "Succeed"
