@@ -1,15 +1,21 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Jun  2 21:16:35 2021
-@author: Ivan
-版權屬於「行銷搬進大程式」所有，若有疑問，可聯絡ivanyang0606@gmail.com
-
-Line Bot聊天機器人
-第一章 Line Bot申請與串接
-Line Bot機器人串接與測試
-"""
 #載入LineBot所需要的套件
+import re
 from flask import Flask, request, abort
+import paho.mqtt.client as mqtt
+import os
+import requests
+import time
+import sqlite3
+
+up, low, f, temp = 0, 0, 0, 0
+# 在全局范围内创建 MQTT 客户端连接
+broker_address = "broker.MQTTGO.io"
+broker_port = 1883
+
+client = mqtt.Client("bot")
+client.connect(broker_address, broker_port, 60)
+
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -26,7 +32,7 @@ line_bot_api = LineBotApi('j+6D0WoRXW318S/mcSB91zE6+DY2mtxsc3LxkkNuRFg2hTgSClDzg
 # 必須放上自己的Channel Secret
 handler = WebhookHandler('50a8a71e2572cb912c9e6e22a58da5ec')
 
-line_bot_api.push_message('U3dbca95eb797c6d92d3ecd583da36d52', TextSendMessage(text='你可以開始了'))
+line_bot_api.push_message('U3dbca95eb797c6d92d3ecd583da36d52', TextSendMessage(text='服務啟動，很高興為您服務'))
 
 
 # 監聽所有來自 /callback 的 Post Request
@@ -48,19 +54,128 @@ def callback():
 
     return 'OK'
 
+def is_integer(s):
+    return s.isdigit()
+
+def is_integer_strict(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
  
 #訊息傳遞區塊
-##### 基本上程式編輯都在這個function #####
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    message = TextSendMessage(text=event.message.text)
-    line_bot_api.reply_message(event.reply_token,message)
+    global up, low, f
 
-@app.route("/")
-def check:
-    return "OK"
-#主程式
-import os
+    # 获取 Line Bot 消息文本
+    message_text = event.message.text
+
+    # 发布消息到 MQTT
+    topic = "temp/test/2023/12/18/2023/12/24/fan"
+
+    if "風扇啟動" in message_text:
+        client.publish(topic, "1")
+        url = 'https://notify-api.line.me/api/notify'
+        token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+        headers = {
+            'Authorization': 'Bearer ' + token
+        }
+        data = {
+            'message': "啟動成功"
+        }
+        requests.post(url, headers=headers, data=data)
+        client.publish(topic, 1)
+    elif "風扇關閉" in message_text:
+        client.publish(topic, "0")
+        url = 'https://notify-api.line.me/api/notify'
+        token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+        headers = {
+            'Authorization': 'Bearer ' + token
+        }
+        data = {
+            'message': "關閉成功"
+        }
+        requests.post(url, headers=headers, data=data)
+        client.publish(topic, 0)
+    elif "溫度上限設定" in message_text:
+        parts = message_text.split()
+        if len(parts) == 2:
+            keyword = parts[0]
+            up = int(parts[1]) 
+            url = 'https://notify-api.line.me/api/notify'
+            token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+            headers = {
+                'Authorization': 'Bearer ' + token
+                    }
+            data = {
+                'message': "設定成功 => 上限為" + str(up) + "°C"
+                    }
+            requests.post(url, headers=headers, data=data)
+    elif "溫度下限設定" in message_text:
+
+        parts = message_text.split()
+        if len(parts) == 2:
+            keyword = parts[0]
+            low = int(parts[1]) 
+            url = 'https://notify-api.line.me/api/notify'
+            token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+            headers = {
+                'Authorization': 'Bearer ' + token
+                    }
+            data = {
+                'message': "設定成功 => 下限為" + str(low) + "°C"
+                    }
+            requests.post(url, headers=headers, data=data)
+
+    elif "溫度頻率設定" in message_text:
+
+        parts = message_text.split()
+        if len(parts) == 2:
+            keyword = parts[0]
+            f = int(parts[1]) 
+            topic = "temp/test/2023/12/18/2023/12/24/f"
+            url = 'https://notify-api.line.me/api/notify'
+            token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+            headers = {
+                'Authorization': 'Bearer ' + token
+                    }
+            data = {
+                'message': "設定成功 => 頻率為" + str(f) + "秒"
+                    }
+            requests.post(url, headers=headers, data=data)
+            client.publish(topic, f)
+    elif "檢視設定" in message_text:
+
+        url = 'https://notify-api.line.me/api/notify'
+        token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+        headers = {
+            'Authorization': 'Bearer ' + token
+                    }
+        data = {
+            'message': "\n上限為 " + str(up) + "°C\n下限為 " + str(low) + "°C\n頻率為 " + str(f) + "秒"
+        }
+        requests.post(url, headers=headers, data=data)
+
+@app.route('/temp/<float:temp>')
+def temp(tempgit):
+    temp = tempgit
+    url = 'https://notify-api.line.me/api/notify'
+    token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+    headers = {
+        'Authorization': 'Bearer ' + token
+            }
+    data = {
+        'message': "目前溫度" + float(temp)
+            }
+    requests.post(url, headers=headers, data=data)
+    return "Succeed"
+    
+
+
+
+# 主程式
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
