@@ -197,6 +197,7 @@ def temp(tempgit):
             data = {
                 'message': "\n注意！現在溫度過高" + "目前溫度" + str(temp)
         }
+            requests.post(url, headers=headers, data=data)
         elif(float(temp) < low):
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, 0)
@@ -208,6 +209,7 @@ def temp(tempgit):
             data = {
                 'message': "\n注意！現在溫度過低" + "目前溫度" + str(temp)
         }
+            requests.post(url, headers=headers, data=data)
         return "Succeed"
     
     except Exception as e:
