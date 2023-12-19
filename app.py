@@ -158,7 +158,7 @@ def handle_message(event):
         }
         requests.post(url, headers=headers, data=data)
 
-@app.route('/temp/<int:tempgit>')
+@app.route('/temp/<float:tempgit>')
 def temp(tempgit):
     try:
         temp = tempgit
@@ -168,7 +168,7 @@ def temp(tempgit):
             'Authorization': 'Bearer ' + token
                 }
         data = {
-            'message': "目前溫度" + float(temp)
+            'message': "目前溫度" + str(temp)
                 }
         requests.post(url, headers=headers, data=data)
         return "Succeed"
