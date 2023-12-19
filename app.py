@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #載入LineBot所需要的套件
 import re
-from flask import Flask, request, abort
+from flask import Flask, jsonify, request, abort
 import paho.mqtt.client as mqtt
 import os
 import requests
@@ -160,17 +160,20 @@ def handle_message(event):
 
 @app.route('/temp/<int:tempgit>')
 def temp(tempgit):
-    temp = tempgit
-    url = 'https://notify-api.line.me/api/notify'
-    token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
-    headers = {
-        'Authorization': 'Bearer ' + token
-            }
-    data = {
-        'message': "目前溫度" + float(temp)
-            }
-    requests.post(url, headers=headers, data=data)
-    return "Succeed"
+    try:
+        temp = tempgit
+        url = 'https://notify-api.line.me/api/notify'
+        token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+        headers = {
+            'Authorization': 'Bearer ' + token
+                }
+        data = {
+            'message': "目前溫度" + float(temp)
+                }
+        requests.post(url, headers=headers, data=data)
+        return "Succeed"
+    except Exception as e:
+            return jsonify({'Error': str(e)})
     
 
 
