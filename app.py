@@ -145,7 +145,17 @@ def handle_message(event):
                 'message': "設定成功 => 頻率為" + str(f) + "秒"
                     }
             requests.post(url, headers=headers, data=data)
-            client.publish(topic, f)
+            if f > 10 :
+                client.publish(topic, f)
+            else:
+                url = 'https://notify-api.line.me/api/notify'
+                token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+                headers = {
+                'Authorization': 'Bearer ' + token
+                    }
+                data = {
+                'message': "頻率時間過短，請重新輸入"
+                    }
     elif "檢視設定" in message_text:
 
         url = 'https://notify-api.line.me/api/notify'
@@ -162,22 +172,38 @@ def handle_message(event):
 def temp(tempgit):
     try:
         temp = tempgit
-        url = 'https://notify-api.line.me/api/notify'
-        token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
-        headers = {
-            'Authorization': 'Bearer ' + token
-                }
-        data = {
-            'message': "目前溫度" + str(temp)
-                }
-        requests.post(url, headers=headers, data=data)
-        
-        if(float(temp) > up):
+        if(float(temp) > low and float(temp) < up):
+            url = 'https://notify-api.line.me/api/notify'
+            token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+            headers = {
+                'Authorization': 'Bearer ' + token
+                    }
+            data = {
+                'message': "目前溫度" + str(temp)
+                    }
+            requests.post(url, headers=headers, data=data)
+        elif(float(temp) > up):
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, 1)
+            url = 'https://notify-api.line.me/api/notify'
+            token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+            headers = {
+                'Authorization': 'Bearer ' + token
+                    }
+            data = {
+                'message': "\n注意！現在溫度過高"
+        }
         elif(float(temp) < low):
             topic = "temp/test/2023/12/18/2023/12/24/fan"
             client.publish(topic, 0)
+            url = 'https://notify-api.line.me/api/notify'
+            token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
+            headers = {
+                'Authorization': 'Bearer ' + token
+                    }
+            data = {
+                'message': "\n注意！現在溫度過低"
+        }
         return "Succeed"
     
     except Exception as e:
