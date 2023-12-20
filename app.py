@@ -5,14 +5,12 @@ from flask import Flask, jsonify, request, abort
 import paho.mqtt.client as mqtt
 import os
 import requests
-import time
-import sqlite3
 up = 35
 low = 20
 f = 0
 temp = 0
-# 在全局范围内创建 MQTT 客户端连接
-
+setting = 0
+setting2 = 0
 
 
 from linebot import (
@@ -51,7 +49,7 @@ def callback():
         abort(400)
 
     return 'OK'
-
+#整數判斷（暫時沒用到）
 def is_integer(s):
     return s.isdigit()
 
@@ -65,7 +63,7 @@ def is_integer_strict(s):
 #訊息傳遞區塊
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    global up, low, f
+    global up, low, f, setting, setting2
 
     # 获取 Line Bot 消息文本
     message_text = event.message.text
@@ -76,11 +74,12 @@ def handle_message(event):
     if "風扇啟動" in message_text:
         broker_address = "broker.MQTTGO.io"
         broker_port = 1883
-
+        setting2 = 0
         client = mqtt.Client("bot")
         client.connect(broker_address, broker_port, 60)
         topic = "temp/test/2023/12/18/2023/12/24/fan"
         client.publish(topic, "1")
+        setting = 1
         url = 'https://notify-api.line.me/api/notify'
         token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
         headers = {
@@ -93,7 +92,8 @@ def handle_message(event):
     elif "風扇關閉" in message_text:
         broker_address = "broker.MQTTGO.io"
         broker_port = 1883
-
+        setting = 0
+        setting2 = 1
         client = mqtt.Client("bot")
         client.connect(broker_address, broker_port, 60)
         topic = "temp/test/2023/12/18/2023/12/24/fan"
@@ -195,8 +195,9 @@ def temp(tempgit):
 
             client = mqtt.Client("bot")
             client.connect(broker_address, broker_port, 60)
-            topic = "temp/test/2023/12/18/2023/12/24/fan"
-            client.publish(topic, "0")
+            if setting != 1:
+                topic = "temp/test/2023/12/18/2023/12/24/fan"
+                client.publish(topic, "0")
             url = 'https://notify-api.line.me/api/notify'
             token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
             headers = {
@@ -213,8 +214,9 @@ def temp(tempgit):
 
             client = mqtt.Client("bot")
             client.connect(broker_address, broker_port, 60)
-            topic = "temp/test/2023/12/18/2023/12/24/fan"
-            client.publish(topic, "1")
+            if setting2 != 0:
+                topic = "temp/test/2023/12/18/2023/12/24/fan"
+                client.publish(topic, "1")
             url = 'https://notify-api.line.me/api/notify'
             token = 'HAEEGV152YwCuL8tknqHwNs0OFhnUfhyUnoLd75S6wp'
             headers = {
